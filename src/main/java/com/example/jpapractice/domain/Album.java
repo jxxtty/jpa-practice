@@ -28,4 +28,10 @@ public class Album extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "album")
     private List<Song> songs = new ArrayList<>();
 
+
+    public void changeAlbumDetail(String albumName, String artist, LocalDateTime releaseDate) {
+        this.albumName = albumName;
+        this.artist = artist;
+        this.releaseDate = releaseDate;
+    }
 }

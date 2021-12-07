@@ -17,4 +17,9 @@ public class AlbumController {
     public CoreRes create(@RequestBody AlbumReq req) {
         return albumService.create(req);
     }
+
+    @PostMapping("/albums2")
+    public CoreRes createAndAdd(@RequestBody AlbumReq req) {
+        return albumService.createAndAdd(req);
+    }
 }
