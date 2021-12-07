@@ -1,14 +1,14 @@
 package com.example.jpapractice.domain;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -24,6 +24,7 @@ public class Album extends BaseEntity {
 
     private LocalDateTime releaseDate; // 발매일
 
+    @Builder.Default // 빌더는 초기화를 무시한다. 이 어노테이션을 달아주면 초기화를 유지한다.
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "album")
     private List<Song> songs = new ArrayList<>();
 
