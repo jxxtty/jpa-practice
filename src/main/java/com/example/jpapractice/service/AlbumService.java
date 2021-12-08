@@ -3,15 +3,19 @@ package com.example.jpapractice.service;
 import com.example.jpapractice.domain.Album;
 import com.example.jpapractice.domain.Song;
 import com.example.jpapractice.domain.dto.AlbumReq;
+import com.example.jpapractice.domain.dto.AlbumSongRes;
 import com.example.jpapractice.domain.dto.CoreRes;
 import com.example.jpapractice.repository.AlbumRepository;
 import com.example.jpapractice.repository.SongRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -81,5 +85,8 @@ public class AlbumService {
         return new CoreRes(HttpStatus.CREATED, "앨범 생성/수정 완료");
     }
 
+    public List<AlbumSongRes> findByAlbumId(Long album_id){
+        return songRepository.findByAlbumId(album_id);
+    }
 
 }
