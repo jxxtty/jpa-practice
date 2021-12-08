@@ -2,9 +2,11 @@ package com.example.jpapractice.service;
 
 import com.example.jpapractice.domain.Album;
 import com.example.jpapractice.domain.Song;
+import com.example.jpapractice.domain.SongStatus;
 import com.example.jpapractice.domain.dto.AlbumReq;
 import com.example.jpapractice.domain.dto.AlbumSongRes;
 import com.example.jpapractice.domain.dto.CoreRes;
+import com.example.jpapractice.domain.dto.SongReq;
 import com.example.jpapractice.repository.AlbumRepository;
 import com.example.jpapractice.repository.SongRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -89,4 +92,28 @@ public class AlbumService {
         return songRepository.findByAlbumId(album_id);
     }
 
+    public CoreRes createSong(Long album_id, SongReq songReq) {
+        Album findAlbum = albumRepository.findById(album_id).orElseThrow(() -> new IllegalArgumentException("해당 앨범을 찾을 수 없습니다."));
+
+        // 1. @DynamicInsert 안넣고 되는지? 된다면 nullable=true 로 지정해도 그런지? 확인하기
+        Song newSong = Song.builder()
+                .album(findAlbum)
+                .title(songReq.getTitle())
+                .time(songReq.getTime())
+                .composer(songReq.getComposer())
+                .lyricist(songReq.getLyricist())
+                .songStatus(songReq.getSongStatus())
+                .build();
+
+        songRepository.save(newSong);
+        return new CoreRes(HttpStatus.CREATED, "노래 추가 생성 완료");
+    }
+
+    @Transactional
+    public CoreRes changeSongStatus(SongStatus status, Long song_id) {
+        Song findSong = songRepository.findById(song_id).orElseThrow(() -> new IllegalArgumentException("해당 노래를 찾을 수 없습니다."));
+        findSong.changeSongStatus(status);
+
+        return new CoreRes(HttpStatus.OK, "노래 상태 수정 완료");
+    }
 }

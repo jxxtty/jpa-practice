@@ -30,6 +30,11 @@ public class Song extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private SongStatus songStatus;
 
+    // 곡 상태변경 메소드
+    public void changeSongStatus(SongStatus status) {
+        this.songStatus = status;
+    }
+
     public Song(Album album, String title, Integer time, String composer, String lyricist, SongStatus songStatus) {
         if(album != null) changeAlbum(album);
         this.title = title;
@@ -39,7 +44,7 @@ public class Song extends BaseEntity{
         this.songStatus = songStatus;
     }
 
-    // 연관관계 편의 메서드
+    // 연관관계 편의 메소드
     public void changeAlbum(Album album) {
         this.album = album;
         album.getSongs().add(this);
