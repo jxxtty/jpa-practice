@@ -1,5 +1,6 @@
 package com.example.jpapractice.domain.dto;
 
+import com.example.jpapractice.domain.AlbumInfo;
 import com.example.jpapractice.domain.SongStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class AlbumReq {
     private String artist;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime releaseDate;
+    private AlbumInfo albumInfo;
 
     // Song
     private List<String> titles;

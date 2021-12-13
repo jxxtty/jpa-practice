@@ -1,5 +1,6 @@
 package com.example.jpapractice.controller;
 
+import com.example.jpapractice.domain.AlbumInfo;
 import com.example.jpapractice.domain.SongStatus;
 import com.example.jpapractice.domain.dto.AlbumReq;
 import com.example.jpapractice.domain.dto.AlbumSongRes;
@@ -45,5 +46,11 @@ public class AlbumController {
     @PostMapping("/albums/song-status")
     public CoreRes changeSongStatus(@RequestBody SongStatus status, @RequestParam Long id) {
         return albumService.changeSongStatus(status, id);
+    }
+
+    // 6. album을 AlbumInfo로 조회
+    @GetMapping("/albums/{albumInfo}")
+    public List<AlbumSongRes> findByAlbumInfo(@PathVariable AlbumInfo albumInfo) {
+        return albumService.findByAlbumInfo(albumInfo);
     }
 }

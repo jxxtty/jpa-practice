@@ -1,6 +1,7 @@
 package com.example.jpapractice.service;
 
 import com.example.jpapractice.domain.Album;
+import com.example.jpapractice.domain.AlbumInfo;
 import com.example.jpapractice.domain.Song;
 import com.example.jpapractice.domain.SongStatus;
 import com.example.jpapractice.domain.dto.AlbumReq;
@@ -31,10 +32,11 @@ public class AlbumService {
         // Album 생성 및 저장
         Album newAlbum =
                 Album.builder()
-                .albumName(req.getAlbumName())
-                .artist(req.getArtist())
-                .releaseDate(req.getReleaseDate())
-                .build();
+                        .albumName(req.getAlbumName())
+                        .artist(req.getArtist())
+                        .releaseDate(req.getReleaseDate())
+                        .albumInfo(req.getAlbumInfo())
+                        .build();
         albumRepository.save(newAlbum);
 
         //
@@ -61,16 +63,19 @@ public class AlbumService {
         Album album = null;
         if(req.getAlbum_id() != null){
             album = albumRepository.findById(req.getAlbum_id()).orElseThrow(() -> new IllegalArgumentException("해당 앨범이 존재하지 않습니다."));
-            album.changeAlbumDetail(req.getAlbumName(), req.getArtist(), req.getReleaseDate());
+            album.changeAlbumDetail(req.getAlbumName(), req.getArtist(), req.getReleaseDate(), req.getAlbumInfo());
         } else {
             album =
                     Album.builder()
                             .albumName(req.getAlbumName())
                             .artist(req.getArtist())
                             .releaseDate(req.getReleaseDate())
+                            .albumInfo(req.getAlbumInfo())
                             .build();
         }
         albumRepository.save(album);
+
+        if(req.getTitles() == null) return new CoreRes(HttpStatus.OK, "앨범 수정 완료");
 
         int size = req.getTimes().size();
         for (int i = 0; i < size; i++) {
@@ -85,7 +90,7 @@ public class AlbumService {
             songRepository.save(newSong);
         }
 
-        return new CoreRes(HttpStatus.CREATED, "앨범 생성/수정 완료");
+        return new CoreRes(HttpStatus.CREATED, "앨범 수정 및 노래 추가 완료");
     }
 
     public List<AlbumSongRes> findByAlbumId(Long album_id){
@@ -115,5 +120,9 @@ public class AlbumService {
         findSong.changeSongStatus(status);
 
         return new CoreRes(HttpStatus.OK, "노래 상태 수정 완료");
+    }
+
+    public List<AlbumSongRes> findByAlbumInfo(AlbumInfo albumInfo) {
+        return songRepository.findByAlbumInfo(albumInfo);
     }
 }

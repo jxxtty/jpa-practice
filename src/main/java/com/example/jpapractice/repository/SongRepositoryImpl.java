@@ -1,5 +1,6 @@
 package com.example.jpapractice.repository;
 
+import com.example.jpapractice.domain.AlbumInfo;
 import com.example.jpapractice.domain.QAlbum;
 import com.example.jpapractice.domain.QSong;
 import com.example.jpapractice.domain.dto.AlbumSongRes;
@@ -33,12 +34,31 @@ public class SongRepositoryImpl implements SongRepositoryCustom{
                                 album.albumName,
                                 album.artist,
                                 album.releaseDate,
+                                album.albumInfo,
                                 song.id,
                                 song.title,
                                 song.songStatus
                         )).from(song)
                 .leftJoin(song.album, album)
                 .where(album.id.eq(album_id))
+                .fetch();
+    }
+
+    @Override
+    public List<AlbumSongRes> findByAlbumInfo(AlbumInfo albumInfo) {
+        return queryFactory.select(
+                        new QAlbumSongRes(
+                                album.id,
+                                album.albumName,
+                                album.artist,
+                                album.releaseDate,
+                                album.albumInfo,
+                                song.id,
+                                song.title,
+                                song.songStatus
+                        )).from(song)
+                .leftJoin(song.album, album)
+                .where(album.albumInfo.eq(albumInfo))
                 .fetch();
     }
 }
