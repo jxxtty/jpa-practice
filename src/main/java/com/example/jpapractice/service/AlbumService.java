@@ -1,14 +1,9 @@
 package com.example.jpapractice.service;
 
-import com.example.jpapractice.domain.Album;
-import com.example.jpapractice.domain.AlbumInfo;
-import com.example.jpapractice.domain.Song;
-import com.example.jpapractice.domain.SongStatus;
-import com.example.jpapractice.domain.dto.AlbumReq;
-import com.example.jpapractice.domain.dto.AlbumSongRes;
-import com.example.jpapractice.domain.dto.CoreRes;
-import com.example.jpapractice.domain.dto.SongReq;
+import com.example.jpapractice.domain.*;
+import com.example.jpapractice.domain.dto.*;
 import com.example.jpapractice.repository.AlbumRepository;
+import com.example.jpapractice.repository.ProducerRepository;
 import com.example.jpapractice.repository.SongRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +22,9 @@ import java.util.List;
 public class AlbumService {
     private final AlbumRepository albumRepository;
     private final SongRepository songRepository;
+    private final ProducerRepository producerRepository;
 
+    // 1. 앨범 생성 및 노래 추가
     public CoreRes create(AlbumReq req) {
         // Album 생성 및 저장
         Album newAlbum =
@@ -46,8 +43,6 @@ public class AlbumService {
                     .album(newAlbum)
                     .title(req.getTitles().get(i))
                     .time(req.getTimes().get(i))
-                    .composer(req.getComposers().get(i))
-                    .lyricist(req.getLyricists().get(i))
                     .songStatus(req.getSongStatuses().get(i))
                     .build();
             songRepository.save(newSong);
@@ -83,8 +78,6 @@ public class AlbumService {
                     .album(album)
                     .title(req.getTitles().get(i))
                     .time(req.getTimes().get(i))
-                    .composer(req.getComposers().get(i))
-                    .lyricist(req.getLyricists().get(i))
                     .songStatus(req.getSongStatuses().get(i))
                     .build();
             songRepository.save(newSong);
@@ -93,9 +86,17 @@ public class AlbumService {
         return new CoreRes(HttpStatus.CREATED, "앨범 수정 및 노래 추가 완료");
     }
 
+    // 2. 앨범아이디로 앨범+노래 조회하기
     public List<AlbumSongRes> findByAlbumId(Long album_id){
         return songRepository.findByAlbumId(album_id);
     }
+
+
+
+
+
+
+    // ------------------------------- Song ----------------------------------
 
     public CoreRes createSong(Long album_id, SongReq songReq) {
         Album findAlbum = albumRepository.findById(album_id).orElseThrow(() -> new IllegalArgumentException("해당 앨범을 찾을 수 없습니다."));
@@ -105,8 +106,6 @@ public class AlbumService {
                 .album(findAlbum)
                 .title(songReq.getTitle())
                 .time(songReq.getTime())
-                .composer(songReq.getComposer())
-                .lyricist(songReq.getLyricist())
                 .songStatus(songReq.getSongStatus())
                 .build();
 
@@ -124,5 +123,56 @@ public class AlbumService {
 
     public List<AlbumSongRes> findByAlbumInfo(AlbumInfo albumInfo) {
         return songRepository.findByAlbumInfo(albumInfo);
+    }
+
+
+
+
+    // ------------------------------- Producer ----------------------------------
+
+    // 프로듀서 생성
+    // 1. 프로듀서만 등록 -> 기존에 추가되어있는 프로듀서를 Song에 추가
+    // 2. 프로듀서 등록과 동시에 Song에 해당 프로듀서 추가
+
+    // 프로듀서 생성(Song이 있다면 Song에 추가까지)
+    public CoreRes createProducer(ProducerReq producerReq) {
+        Song song = null;
+        if(producerReq.getSong_id() != null)
+            song = songRepository.findById(producerReq.getSong_id()).orElseThrow(() -> new IllegalArgumentException("해당하는 노래를 찾을 수 없습니다."));
+
+        Producer newProducer = new Producer(producerReq.getProducerType(),
+                producerReq.getProducer_name(),
+                producerReq.getProducer_nickname(),
+                song);
+
+        producerRepository.save(newProducer);
+
+        return new CoreRes(HttpStatus.CREATED, "프로듀서 생성 완료");
+    }
+
+
+    // 프로듀서 수정
+    @Transactional
+    public CoreRes updateProducer(Long id, ProducerReq producerReq) {
+        Producer findProducer = producerRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당하는 프로듀서를 찾을 수 없습니다."));
+
+        findProducer.updateProducer(producerReq);
+
+        return new CoreRes(HttpStatus.OK, "프로듀서 수정 완료");
+    }
+
+
+    // 기존에 추가되어있는 프로듀서 Song과 연결하기
+    @Transactional
+    public CoreRes addProducerToSong(Long song_id, List<Long> producer_ids) {
+        Song findSong = songRepository.findById(song_id).orElseThrow(() -> new IllegalArgumentException("해당하는 노래를 찾을 수 없습니다."));
+
+        for (Long idx : producer_ids) {
+            Producer findProducer = producerRepository.findById(idx).orElseThrow(() -> new IllegalArgumentException("해당하는 프로듀서를 찾을 수 없습니다."));
+
+            findProducer.changeSong(findSong);
+        }
+
+        return new CoreRes(HttpStatus.OK, "기존 프로듀서를 노래에 추가 완료");
     }
 }

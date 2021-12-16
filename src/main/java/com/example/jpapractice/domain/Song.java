@@ -3,6 +3,8 @@ package com.example.jpapractice.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -23,9 +25,9 @@ public class Song extends BaseEntity{
 
     private Integer time; // 재생시간
 
-    private String composer; // 작곡가
-
-    private String lyricist; // 작사가
+    @Builder.Default
+    @OneToMany(mappedBy = "song")
+    private List<Producer> producers = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private SongStatus songStatus;
@@ -35,17 +37,18 @@ public class Song extends BaseEntity{
         this.songStatus = status;
     }
 
-    public Song(Album album, String title, Integer time, String composer, String lyricist, SongStatus songStatus) {
+    public Song(Album album, String title, Integer time, SongStatus songStatus) {
         if(album != null) changeAlbum(album);
         this.title = title;
         this.time = time;
-        this.composer = composer;
-        this.lyricist = lyricist;
+//        this.composer = composer;
+//        this.lyricist = lyricist;
         this.songStatus = songStatus;
     }
 
     // 연관관계 편의 메소드
     public void changeAlbum(Album album) {
+        if(this.album != null) this.album.getSongs().remove(this);
         this.album = album;
         album.getSongs().add(this);
     }

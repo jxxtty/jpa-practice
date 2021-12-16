@@ -2,10 +2,7 @@ package com.example.jpapractice.controller;
 
 import com.example.jpapractice.domain.AlbumInfo;
 import com.example.jpapractice.domain.SongStatus;
-import com.example.jpapractice.domain.dto.AlbumReq;
-import com.example.jpapractice.domain.dto.AlbumSongRes;
-import com.example.jpapractice.domain.dto.CoreRes;
-import com.example.jpapractice.domain.dto.SongReq;
+import com.example.jpapractice.domain.dto.*;
 import com.example.jpapractice.service.AlbumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -52,5 +49,23 @@ public class AlbumController {
     @GetMapping("/albums/{albumInfo}")
     public List<AlbumSongRes> findByAlbumInfo(@PathVariable AlbumInfo albumInfo) {
         return albumService.findByAlbumInfo(albumInfo);
+    }
+
+    // 7. 프로듀서 등록
+    @PostMapping("/albums/producers")
+    public CoreRes createProducer(@RequestBody ProducerReq producerReq) {
+        return albumService.createProducer(producerReq);
+    }
+
+    // 8. 프로듀서 정보 수정
+    @PatchMapping("/albums/producers/{idx}")
+    public CoreRes updateProducer(@RequestBody ProducerReq producerReq, @PathVariable Long idx) {
+        return albumService.updateProducer(idx, producerReq);
+    }
+
+    // 9. 기존의 노래에 기존의 프로듀서 추가하기
+    @PostMapping("/albums/song/add-producer")
+    public CoreRes addProducerToSong(@RequestBody IdxListDto idxListDto, @RequestParam Long id) {
+        return albumService.addProducerToSong(id, idxListDto.getIdList());
     }
 }

@@ -1,6 +1,7 @@
 package com.example.jpapractice.domain.dto;
 
 import com.example.jpapractice.domain.AlbumInfo;
+import com.example.jpapractice.domain.ProducerType;
 import com.example.jpapractice.domain.SongStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,6 @@ public class AlbumReq {
     // Song
     private List<String> titles;
     private List<Integer> times;
-    private List<String> composers;
-    private List<String> lyricists;
     private List<SongStatus> songStatuses;
+
 }
