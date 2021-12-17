@@ -7,9 +7,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builderfi
 @Slf4j
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -27,7 +25,6 @@ public class Song extends BaseEntity{
 
     private Integer time; // 재생시간
 
-    @Builder.Default
     @OneToMany(mappedBy = "song")
     private List<Producer> producers = new ArrayList<>();
 
