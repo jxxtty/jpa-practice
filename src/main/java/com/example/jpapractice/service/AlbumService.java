@@ -7,13 +7,10 @@ import com.example.jpapractice.repository.ProducerRepository;
 import com.example.jpapractice.repository.SongRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -174,5 +171,30 @@ public class AlbumService {
         }
 
         return new CoreRes(HttpStatus.OK, "기존 프로듀서를 노래에 추가 완료");
+    }
+
+
+    // Album, Song, Producer 한번에 생성하기
+    public CoreRes createSongProducer(Long album_id, SongProducerReq songProducerReq) {
+        Album findAlbum = albumRepository.findById(album_id).orElseThrow(() -> new IllegalArgumentException("해당하는 앨범을 찾을 수 없습니다."));
+
+        Song newSong = Song.builder()
+                        .album(findAlbum)
+                        .title(songProducerReq.getTitle())
+                        .time(songProducerReq.getTime())
+                        .songStatus(songProducerReq.getSongStatus())
+                        .build();
+        songRepository.save(newSong);
+
+        int size = songProducerReq.getProducerNames().size();
+        for (int i = 0; i < size; i++) {
+            Producer newProducer = new Producer(songProducerReq.getProducerTypes().get(i),
+                    songProducerReq.getProducerNames().get(i),
+                    songProducerReq.getProducerNicknames().get(i),
+                    newSong);
+            producerRepository.save(newProducer);
+        }
+
+        return new CoreRes(HttpStatus.CREATED, "노래, 프로듀서 생성 완료");
     }
 }

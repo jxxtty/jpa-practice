@@ -68,4 +68,10 @@ public class AlbumController {
     public CoreRes addProducerToSong(@RequestBody IdxListDto idxListDto, @RequestParam Long id) {
         return albumService.addProducerToSong(id, idxListDto.getIdList());
     }
+
+    // 10. 노래와 프로듀서 생성
+    @PostMapping("/albums/songs/producers")
+    public CoreRes createSongAndProducer(@RequestBody SongProducerReq songProducerReq, @RequestParam Long id) {
+        return albumService.createSongProducer(id, songProducerReq);
+    }
 }

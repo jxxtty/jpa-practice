@@ -1,12 +1,14 @@
 package com.example.jpapractice.domain;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
+@Builderfi
+@Slf4j
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -37,17 +39,17 @@ public class Song extends BaseEntity{
         this.songStatus = status;
     }
 
+    @Builder
     public Song(Album album, String title, Integer time, SongStatus songStatus) {
         if(album != null) changeAlbum(album);
         this.title = title;
         this.time = time;
-//        this.composer = composer;
-//        this.lyricist = lyricist;
         this.songStatus = songStatus;
     }
 
     // 연관관계 편의 메소드
     public void changeAlbum(Album album) {
+        log.info(">>>>>>>>>>>> builder설정 / changeAlbum 호출되었음!");
         if(this.album != null) this.album.getSongs().remove(this);
         this.album = album;
         album.getSongs().add(this);
