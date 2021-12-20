@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -24,24 +25,13 @@ public class AlbumService {
     // 1. 앨범 생성 및 노래 추가
     public CoreRes create(AlbumReq req) {
         // Album 생성 및 저장
-        Album newAlbum =
-                Album.builder()
-                        .albumName(req.getAlbumName())
-                        .artist(req.getArtist())
-                        .releaseDate(req.getReleaseDate())
-                        .albumInfo(req.getAlbumInfo())
-                        .build();
+        Album newAlbum = makeNewAlbum(req.getAlbumName(), req.getArtist(), req.getReleaseDate(), req.getAlbumInfo());
         albumRepository.save(newAlbum);
 
         //
         int size = req.getTimes().size();
         for (int i = 0; i < size; i++) {
-            Song newSong = Song.builder()
-                    .album(newAlbum)
-                    .title(req.getTitles().get(i))
-                    .time(req.getTimes().get(i))
-                    .songStatus(req.getSongStatuses().get(i))
-                    .build();
+            Song newSong = makeNewSong(newAlbum, req.getTitles().get(i), req.getTimes().get(i), req.getSongStatuses().get(i));
             songRepository.save(newSong);
         }
 
@@ -57,13 +47,7 @@ public class AlbumService {
             album = albumRepository.findById(req.getAlbum_id()).orElseThrow(() -> new IllegalArgumentException("해당 앨범이 존재하지 않습니다."));
             album.changeAlbumDetail(req.getAlbumName(), req.getArtist(), req.getReleaseDate(), req.getAlbumInfo());
         } else {
-            album =
-                    Album.builder()
-                            .albumName(req.getAlbumName())
-                            .artist(req.getArtist())
-                            .releaseDate(req.getReleaseDate())
-                            .albumInfo(req.getAlbumInfo())
-                            .build();
+            album = makeNewAlbum(req.getAlbumName(), req.getArtist(), req.getReleaseDate(), req.getAlbumInfo());
         }
         albumRepository.save(album);
 
@@ -71,12 +55,7 @@ public class AlbumService {
 
         int size = req.getTimes().size();
         for (int i = 0; i < size; i++) {
-            Song newSong = Song.builder()
-                    .album(album)
-                    .title(req.getTitles().get(i))
-                    .time(req.getTimes().get(i))
-                    .songStatus(req.getSongStatuses().get(i))
-                    .build();
+            Song newSong = makeNewSong(album, req.getTitles().get(i), req.getTimes().get(i), req.getSongStatuses().get(i));
             songRepository.save(newSong);
         }
 
@@ -89,6 +68,14 @@ public class AlbumService {
     }
 
 
+    public Album makeNewAlbum(String albumName, String artist, LocalDateTime releaseDate, AlbumInfo albumInfo) {
+        return Album.builder()
+                .albumName(albumName)
+                .artist(artist)
+                .releaseDate(releaseDate)
+                .albumInfo(albumInfo)
+                .build();
+    }
 
 
 
@@ -99,12 +86,7 @@ public class AlbumService {
         Album findAlbum = albumRepository.findById(album_id).orElseThrow(() -> new IllegalArgumentException("해당 앨범을 찾을 수 없습니다."));
 
         // 1. @DynamicInsert 안넣고 되는지? 된다면 nullable=true 로 지정해도 그런지? 확인하기
-        Song newSong = Song.builder()
-                .album(findAlbum)
-                .title(songReq.getTitle())
-                .time(songReq.getTime())
-                .songStatus(songReq.getSongStatus())
-                .build();
+        Song newSong = makeNewSong(findAlbum, songReq.getTitle(), songReq.getTime(), songReq.getSongStatus());
 
         songRepository.save(newSong);
         return new CoreRes(HttpStatus.CREATED, "노래 추가 생성 완료");
@@ -123,6 +105,14 @@ public class AlbumService {
     }
 
 
+    public Song makeNewSong(Album album, String title, Integer time, SongStatus songStatus) {
+        return Song.builder()
+                .album(album)
+                .title(title)
+                .time(time)
+                .songStatus(songStatus)
+                .build();
+    }
 
 
     // ------------------------------- Producer ----------------------------------
@@ -137,10 +127,10 @@ public class AlbumService {
         if(producerReq.getSong_id() != null)
             song = songRepository.findById(producerReq.getSong_id()).orElseThrow(() -> new IllegalArgumentException("해당하는 노래를 찾을 수 없습니다."));
 
-        Producer newProducer = new Producer(producerReq.getProducerType(),
-                producerReq.getProducer_name(),
-                producerReq.getProducer_nickname(),
-                song);
+        Producer newProducer = makeNewProducer(producerReq.getProducerType(),
+                                                producerReq.getProducer_name(),
+                                                producerReq.getProducer_nickname(),
+                                                song);
 
         producerRepository.save(newProducer);
 
@@ -178,23 +168,27 @@ public class AlbumService {
     public CoreRes createSongProducer(Long album_id, SongProducerReq songProducerReq) {
         Album findAlbum = albumRepository.findById(album_id).orElseThrow(() -> new IllegalArgumentException("해당하는 앨범을 찾을 수 없습니다."));
 
-        Song newSong = Song.builder()
-                        .album(findAlbum)
-                        .title(songProducerReq.getTitle())
-                        .time(songProducerReq.getTime())
-                        .songStatus(songProducerReq.getSongStatus())
-                        .build();
+        Song newSong = makeNewSong(findAlbum, songProducerReq.getTitle(), songProducerReq.getTime(), songProducerReq.getSongStatus());
         songRepository.save(newSong);
 
         int size = songProducerReq.getProducerNames().size();
         for (int i = 0; i < size; i++) {
-            Producer newProducer = new Producer(songProducerReq.getProducerTypes().get(i),
-                    songProducerReq.getProducerNames().get(i),
-                    songProducerReq.getProducerNicknames().get(i),
-                    newSong);
+            Producer newProducer = makeNewProducer(songProducerReq.getProducerTypes().get(i),
+                                                    songProducerReq.getProducerNames().get(i),
+                                                    songProducerReq.getProducerNicknames().get(i),
+                                                    newSong);
             producerRepository.save(newProducer);
         }
 
         return new CoreRes(HttpStatus.CREATED, "노래, 프로듀서 생성 완료");
+    }
+
+    public Producer makeNewProducer(ProducerType producerType, String producer_name, String producer_nickname, Song song) {
+        return Producer.builder()
+                .producerType(producerType)
+                .producer_name(producer_name)
+                .producer_nickname(producer_nickname)
+                .song(song)
+                .build();
     }
 }

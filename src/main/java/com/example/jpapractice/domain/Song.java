@@ -46,7 +46,6 @@ public class Song extends BaseEntity{
 
     // 연관관계 편의 메소드
     public void changeAlbum(Album album) {
-        log.info(">>>>>>>>>>>> builder설정 / changeAlbum 호출되었음!");
         if(this.album != null) this.album.getSongs().remove(this);
         this.album = album;
         album.getSongs().add(this);

@@ -5,8 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Builder
-@AllArgsConstructor
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -27,6 +26,7 @@ public class Producer {
     @JoinColumn(name = "song_id")
     private Song song;
 
+    @Builder
     public Producer(ProducerType producerType, String producer_name, String producer_nickname, Song song) {
         this.producerType = producerType;
         this.producer_name = producer_name;
