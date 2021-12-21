@@ -1,4 +1,4 @@
-package com.example.jpapractice.domain;
+package com.example.jpapractice.album.domain;
 
 public enum ProducerType {
     COMPOSER("작곡가"),

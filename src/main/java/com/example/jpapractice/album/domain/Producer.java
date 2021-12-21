@@ -1,6 +1,6 @@
-package com.example.jpapractice.domain;
+package com.example.jpapractice.album.domain;
 
-import com.example.jpapractice.domain.dto.ProducerReq;
+import com.example.jpapractice.album.domain.dto.ProducerReq;
 import lombok.*;
 
 import javax.persistence.*;

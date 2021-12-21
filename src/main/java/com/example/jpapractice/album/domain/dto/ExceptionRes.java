@@ -1,4 +1,4 @@
-package com.example.jpapractice.domain.dto;
+package com.example.jpapractice.album.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

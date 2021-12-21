@@ -1,7 +1,7 @@
-package com.example.jpapractice.domain.dto;
+package com.example.jpapractice.album.domain.dto;
 
-import com.example.jpapractice.domain.AlbumInfo;
-import com.example.jpapractice.domain.SongStatus;
+import com.example.jpapractice.album.domain.AlbumInfo;
+import com.example.jpapractice.album.domain.SongStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 

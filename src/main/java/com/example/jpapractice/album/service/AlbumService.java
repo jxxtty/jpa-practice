@@ -1,10 +1,10 @@
-package com.example.jpapractice.service;
+package com.example.jpapractice.album.service;
 
-import com.example.jpapractice.domain.*;
-import com.example.jpapractice.domain.dto.*;
-import com.example.jpapractice.repository.AlbumRepository;
-import com.example.jpapractice.repository.ProducerRepository;
-import com.example.jpapractice.repository.SongRepository;
+import com.example.jpapractice.album.domain.*;
+import com.example.jpapractice.album.domain.dto.*;
+import com.example.jpapractice.album.repository.AlbumRepository;
+import com.example.jpapractice.album.repository.ProducerRepository;
+import com.example.jpapractice.album.repository.SongRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
-package com.example.jpapractice.controller;
+package com.example.jpapractice.album.controller;
 
-import com.example.jpapractice.domain.dto.ExceptionRes;
+import com.example.jpapractice.album.domain.dto.ExceptionRes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

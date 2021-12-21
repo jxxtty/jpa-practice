@@ -1,13 +1,10 @@
-package com.example.jpapractice.domain.dto;
+package com.example.jpapractice.album.domain.dto;
 
-import com.example.jpapractice.domain.AlbumInfo;
-import com.example.jpapractice.domain.ProducerType;
-import com.example.jpapractice.domain.SongStatus;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.example.jpapractice.album.domain.ProducerType;
+import com.example.jpapractice.album.domain.SongStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data

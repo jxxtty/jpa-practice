@@ -1,6 +1,6 @@
-package com.example.jpapractice.domain.dto;
+package com.example.jpapractice.album.domain.dto;
 
-import com.example.jpapractice.domain.SongStatus;
+import com.example.jpapractice.album.domain.SongStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

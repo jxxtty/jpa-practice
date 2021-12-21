@@ -1,22 +1,16 @@
-package com.example.jpapractice.repository;
+package com.example.jpapractice.album.repository;
 
-import com.example.jpapractice.domain.AlbumInfo;
-import com.example.jpapractice.domain.QAlbum;
-import com.example.jpapractice.domain.QSong;
-import com.example.jpapractice.domain.dto.AlbumSongRes;
-import com.example.jpapractice.domain.dto.QAlbumSongRes;
-import com.querydsl.core.QueryResults;
+import com.example.jpapractice.album.domain.AlbumInfo;
+import com.example.jpapractice.album.domain.dto.AlbumSongRes;
+import com.example.jpapractice.album.domain.dto.QAlbumSongRes;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
 
 import java.util.List;
 
-import static com.example.jpapractice.domain.QAlbum.*;
-import static com.example.jpapractice.domain.QSong.*;
+import static com.example.jpapractice.album.domain.QAlbum.*;
+import static com.example.jpapractice.album.domain.QSong.*;
 
 public class SongRepositoryImpl implements SongRepositoryCustom{
 

@@ -1,4 +1,4 @@
-package com.example.jpapractice.domain;
+package com.example.jpapractice.album.domain;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;

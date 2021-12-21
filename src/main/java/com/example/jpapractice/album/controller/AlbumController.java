@@ -1,11 +1,10 @@
-package com.example.jpapractice.controller;
+package com.example.jpapractice.album.controller;
 
-import com.example.jpapractice.domain.AlbumInfo;
-import com.example.jpapractice.domain.SongStatus;
-import com.example.jpapractice.domain.dto.*;
-import com.example.jpapractice.service.AlbumService;
+import com.example.jpapractice.album.domain.AlbumInfo;
+import com.example.jpapractice.album.domain.SongStatus;
+import com.example.jpapractice.album.domain.dto.*;
+import com.example.jpapractice.album.service.AlbumService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
